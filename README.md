@@ -46,21 +46,21 @@ Otevři třídu končící na "Demo" pro spuštění.
 Po kontrole kódu jsem opravil tři věci.
 
 **1. Kontrola vstupů**
-Problém: třídy braly i `null` a záporná čísla.
+Problém: třídy braly i `null` a záporná čísla.  
 Oprava: vstupy se kontrolují hned na začátku a špatná hodnota vyhodí výjimku.
 ```java
 this.title = Check.text(title, "title");   // null nebo prázdný text neprojde
 ```
 
 **2. Metody říkají, jak dopadly**
-Problém: `pay()` vracelo vždy `true`, i když platba neprošla.
+Problém: `pay()` vracelo vždy `true`, i když platba neprošla.  
 Oprava: vrací skutečný výsledek a obchod ho zpracuje.
 ```java
 return bank.makeTransfer(account, cents);   // false, když banka platbu odmítne
 ```
 
 **3. Enum a BigDecimal**
-Problém: role byla text `"ADMIN"` a peníze byly `double`.
+Problém: role byla text `"ADMIN"` a peníze byly `double`.  
 Oprava: role je `enum Role` a peníze jsou `BigDecimal`.
 ```java
 public enum Role { GUEST, USER, ADMIN }
