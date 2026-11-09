@@ -1,11 +1,14 @@
 package upa.fei.dp.singleton;
 
+import java.util.Objects;
+
 public class Configuration {
 
     private static final Configuration INSTANCE = new Configuration();
 
-    private String language = "cs";
-    private int maxOrders = 3;
+    private static final int MAX_ORDERS = 3;
+
+    private volatile Language language = Language.CS;
 
     private Configuration() { }
 
@@ -13,7 +16,11 @@ public class Configuration {
         return INSTANCE;
     }
 
-    public String getLanguage() { return language; }
-    public void setLanguage(String language) { this.language = language; }
-    public int getMaxOrders() { return maxOrders; }
+    public Language getLanguage() { return language; }
+
+    public void setLanguage(Language language) {
+        this.language = Objects.requireNonNull(language, "language nesmi byt null");
+    }
+
+    public int getMaxOrders() { return MAX_ORDERS; }
 }

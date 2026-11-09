@@ -5,13 +5,12 @@ public class TextReport extends ReportGenerator {
     protected String formatName() { return "TXT"; }
 
     @Override
-    protected void header(String title) {
-        System.out.println(title.toUpperCase());
-        System.out.println("-----------");
+    protected String header(String title) {
+        return title.toUpperCase() + "\n-----------";
     }
 
     @Override
-    protected void line(String row) {
-        System.out.println("* " + row);
+    protected String line(String row) {
+        return "* " + row;
     }
 }

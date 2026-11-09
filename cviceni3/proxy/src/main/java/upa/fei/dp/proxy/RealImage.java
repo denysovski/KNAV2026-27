@@ -4,8 +4,8 @@ public class RealImage implements Image {
     private final String file;
 
     public RealImage(String file) {
-        this.file = file;
-        System.out.println("RealImage: nacitam " + file + " z disku (draha operace)");
+        this.file = Check.text(file, "file");
+        System.out.println("RealImage: nacitam " + this.file + " z disku (draha operace)");
     }
 
     @Override

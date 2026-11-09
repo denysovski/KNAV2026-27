@@ -5,17 +5,21 @@ public class HtmlReport extends ReportGenerator {
     protected String formatName() { return "HTML"; }
 
     @Override
-    protected void header(String title) {
-        System.out.println("<h1>" + title + "</h1>");
+    protected String header(String title) {
+        return "<h1>" + escape(title) + "</h1>";
     }
 
     @Override
-    protected void line(String row) {
-        System.out.println("<p>" + row + "</p>");
+    protected String line(String row) {
+        return "<p>" + escape(row) + "</p>";
     }
 
     @Override
-    protected void footer(int count) {
-        System.out.println("<footer>Pocet radku: " + count + "</footer>");
+    protected String footer(int count) {
+        return "<footer>Pocet radku: " + count + "</footer>";
+    }
+
+    private static String escape(String text) {
+        return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
     }
 }

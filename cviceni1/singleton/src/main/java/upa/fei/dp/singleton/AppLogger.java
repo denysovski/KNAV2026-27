@@ -1,6 +1,7 @@
 package upa.fei.dp.singleton;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class AppLogger {
@@ -24,11 +25,17 @@ public class AppLogger {
         return instance;
     }
 
-    public void log(String source, String message) {
-        history.add(source + ": " + message);
+    public synchronized void log(String source, String message) {
+        String src = Check.text(source, "source");
+        String msg = Check.text(message, "message");
+        history.add(src + ": " + msg);
     }
 
-    public void printHistory() {
+    public synchronized List<String> getHistory() {
+        return Collections.unmodifiableList(new ArrayList<>(history));
+    }
+
+    public synchronized void printHistory() {
         System.out.println("--- Historie logu (" + history.size() + " zaznamu) ---");
         for (String line : history) {
             System.out.println(line);

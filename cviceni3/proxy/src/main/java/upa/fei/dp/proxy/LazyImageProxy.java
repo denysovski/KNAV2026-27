@@ -5,7 +5,7 @@ public class LazyImageProxy implements Image {
     private RealImage real;
 
     public LazyImageProxy(String file) {
-        this.file = file;
+        this.file = Check.text(file, "file");
     }
 
     @Override

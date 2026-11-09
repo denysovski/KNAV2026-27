@@ -1,6 +1,9 @@
 package upa.fei.dp.strategy;
 
+import java.math.BigDecimal;
+
 public interface ShippingStrategy {
     String name();
-    double calculate(double weightKg, double distanceKm);
+
+    BigDecimal calculate(double weightKg, double distanceKm);
 }

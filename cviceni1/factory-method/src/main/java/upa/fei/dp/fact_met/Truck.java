@@ -1,11 +1,13 @@
 package upa.fei.dp.fact_met;
 
+import java.math.BigDecimal;
+
 public class Truck implements TransportType {
     @Override
     public void deliver(String cargo) {
-        System.out.println("Delivery by Truck: " + cargo + " (po silnici)");
+        System.out.println("Delivery by Truck: " + Check.text(cargo, "cargo") + " (po silnici)");
     }
 
     @Override
-    public double costPerKm() { return 2.0; }
+    public BigDecimal costPerKm() { return new BigDecimal("2.00"); }
 }

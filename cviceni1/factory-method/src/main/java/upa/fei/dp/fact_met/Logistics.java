@@ -1,13 +1,27 @@
 package upa.fei.dp.fact_met;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Objects;
+
 public abstract class Logistics {
 
     public abstract TransportType createTransport();
 
-    public void planDelivery(String cargo, double distanceKm) {
-        TransportType transport = createTransport();
-        System.out.println("Planuji dopravu: " + cargo + ", vzdalenost " + distanceKm + " km");
-        transport.deliver(cargo);
-        System.out.println("Cena: " + transport.costPerKm() * distanceKm + " Kc\n");
+    public BigDecimal planDelivery(String cargo, double distanceKm) {
+        String cleanCargo = Check.text(cargo, "cargo");
+        Check.positive(distanceKm, "distanceKm");
+
+        TransportType transport = Objects.requireNonNull(createTransport(),
+                "createTransport() nesmi vratit null");
+
+        System.out.println("Planuji dopravu: " + cleanCargo + ", vzdalenost " + distanceKm + " km");
+        transport.deliver(cleanCargo);
+
+        BigDecimal price = transport.costPerKm()
+                .multiply(BigDecimal.valueOf(distanceKm))
+                .setScale(2, RoundingMode.HALF_UP);
+        System.out.println("Cena: " + price.toPlainString() + " Kc\n");
+        return price;
     }
 }

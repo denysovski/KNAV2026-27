@@ -5,15 +5,22 @@ public class CsvReport extends ReportGenerator {
     protected String formatName() { return "CSV"; }
 
     @Override
-    protected void header(String title) {
-        System.out.println("nazev;" + title);
+    protected String header(String title) {
+        return "nazev;" + quote(title);
     }
 
     @Override
-    protected void line(String row) {
-        System.out.println("radek;" + row);
+    protected String line(String row) {
+        return "radek;" + quote(row);
     }
 
     @Override
     protected boolean hasFooter() { return false; }
+
+    private static String quote(String value) {
+        if (value.contains(";") || value.contains("\"")) {
+            return "\"" + value.replace("\"", "\"\"") + "\"";
+        }
+        return value;
+    }
 }
