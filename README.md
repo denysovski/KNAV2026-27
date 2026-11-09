@@ -41,3 +41,74 @@ Otevři třídu končící na "Demo" pro spuštění.
 ### Cvičení 4
 - Strategy: Order drží rozhraní ShippingStrategy a dá se přepnout mezi TruckStrategy, ShipStrategy a AirStrategy.
 - Template Method: ReportGenerator.generate() je kostra algoritmu. TextReport, HtmlReport a CsvReport doplňují jen jednotlivé kroky.
+
+## Úprava podle poznatků
+Po kontrole kódu jsem opravil tři věci, které byly ve všech příkladech.
+
+### 1. Kontrola vstupů
+**Problém:** Třídy braly cokoliv, i `null` nebo záporná čísla. Třeba `new Book(null, null, -5)` prošlo a objednávka se zápornou hmotností vyšla na zápornou cenu.
+
+**Oprava:** Vstupy se kontrolují hned na začátku. `null` hlídá `Objects.requireNonNull`, prázdné texty a nekladná čísla vyhodí `IllegalArgumentException`.
+
+```java
+// předtím
+public Book(String title, String author, int year) {
+    this.title = title;
+    ...
+}
+
+// teď
+public Book(String title, String author, int year) {
+    this.title = Check.text(title, "title");
+    this.author = Check.text(author, "author");
+    this.year = Check.range(year, 1450, Year.now().getValue(), "year");
+}
+```
+
+### 2. Metody říkají, jak dopadly
+**Problém:** Metody se tvářily, že vše proběhlo dobře. `pay()` vracelo vždy `true` a obchod výsledek ani nečetl. `shutDown()` ve fasádě vypínal všechna zařízení, i když nebyla zapnutá.
+
+**Oprava:** Metody vrací skutečný výsledek a volající ho zpracuje.
+
+```java
+// předtím
+bank.makeTransfer(account, cents);
+return true;
+
+// teď
+return bank.makeTransfer(account, cents);   // false, když banka platbu odmítne
+```
+
+```java
+// Shop.checkout
+boolean paid = processor.pay(name, amount);
+System.out.println(paid ? "objednavka zaplacena" : "PLATBA SELHALA");
+```
+
+Zařízení v domácím kině si pamatují, jestli jsou zapnutá. Při poslechu hudby se tak projektor ani plátno nevypínají a druhé `shutDown()` vrátí `false`.
+
+### 3. Enum a BigDecimal
+**Problém:** Role byla text `"ADMIN"` (zadání `"admin"` se zamítlo) a peníze byly typu `double`.
+
+**Oprava:** Role je `enum` a peníze jsou `BigDecimal`.
+
+```java
+// předtím
+if ("ADMIN".equals(userRole)) { ... }
+
+// teď
+public enum Role { GUEST, USER, ADMIN }
+Role.parse("admin");   // funguje i s malými písmeny
+```
+
+```java
+// předtím
+double price = weightKg * 0.5 + distanceKm * 2;
+
+// teď
+BigDecimal price = BigDecimal.valueOf(weightKg).multiply(new BigDecimal("0.5"))
+        .add(BigDecimal.valueOf(distanceKm).multiply(new BigDecimal("2")))
+        .setScale(2, RoundingMode.HALF_UP);
+```
+
+Každé `Demo` na konci ukazuje, že neplatný vstup se zachytí a vypíše se důvod.
